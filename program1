@@ -1,0 +1,101 @@
+import java.util.Scanner;
+
+public class Exercise2 {
+
+	public static void main(String[] args) {
+		mathProgram();
+
+	}
+
+	private static void mathProgram() {
+		Scanner scan = new Scanner(System.in);
+		
+		System.out.println("Wybierz opcje, którą chcesz wykonać ");
+		
+		System.out.println("Kalkulator prosty, wybierz 1");
+		System.out.println("Oblicz pole prostokąta, wybierz 2");
+		System.out.println("Sprawdz czy liczba jest pierwsza, wybierz 3");
+		
+		int choice = scan.nextInt();
+
+		
+		int wynik = 0;
+		boolean wynik2 = false;
+		
+		switch(choice) {
+		case 1:
+			System.out.println("Podaj pierwszą liczbe");
+			int firstNum = scan.nextInt();
+			
+			System.out.println("Podaj druga liczbe");
+			int secondNum = scan.nextInt();
+			
+			System.out.println("Podaj znak operacji");
+			String oper = scan.next();
+			
+			wynik = kalkulator(firstNum, secondNum, oper);
+			break;
+		case 2:
+			System.out.println("Podaj długość prostokąta");
+			int length = scan.nextInt();
+			
+			System.out.println("Podaj szerokość prostokąta");
+			int width = scan.nextInt();
+			
+			wynik = poleProstokata(length, width);
+		case 3:
+			System.out.println("Podaj liczbe ");
+			int number = scan.nextInt();
+			
+			wynik2 = czyPierwsza(number);
+			
+			}
+		if (choice == 1 || choice == 2) {
+			System.out.println("Wynik: "+ wynik);
+		} else {
+			System.out.println("Czy liczba jest pierwsza: " + wynik2);
+		}
+		
+	}
+
+	private static int kalkulator(int a, int b, String c) {
+		int result = 0;
+
+		c = c.toLowerCase();
+		switch (c) {
+		case "+":
+			result = a + b;
+			break;
+		case "-":
+			result = a - b;
+			break;
+		case "*":
+			result = a * b;
+			break;
+		case "/":
+			result = a / b;
+			break;
+
+		}
+		return result;
+	}
+
+	private static int poleProstokata(int a, int b) {
+		return a * b;
+	}
+	
+	private static Boolean czyPierwsza(int a) {
+		
+		boolean wynik2 = true;
+		
+		for(int i = 2; i <= Math.sqrt(a); i++) {
+			if(a % i == 0) {
+				wynik2 = false;
+				break;
+			} else {
+				continue;
+			}
+		}
+		return wynik2;
+	}
+}
