@@ -1,4 +1,5 @@
 package KostkaProgram;
+
 import java.util.Random;
 import java.util.Scanner;
 
@@ -7,70 +8,116 @@ class Player {
 	String playerName;
 
 	int result;
-	
+
 	Player(String playerName) {
 		this.playerName = playerName;
 	}
-	
+
 	void addResult(int added) {
 		result += added;
 	}
-	int getResult() {
+
+	public int getResult() {
 		return result;
 	}
 }
 
+class Settings {
 
-class Game {
 	Scanner scan = new Scanner(System.in);
-	Player player1; // Deklaracja obiektu gracza 1
-	Player player2; // Deklaracja obiektu gracza 2
-	static int round = 0;
-	static int playerTurn = 0;
-	
-	void setPlayer1(String name) {
-		player1 = new Player(name);
+	int playersNumber = 2;
+	int layersNumber = 6;
+
+	void changeNumberOfPlayers(int size) {
+		if(size < 2) {
+			throw new IllegalArgumentException("Ilośc graczy musi wynosić minimum 2");
+		} else {
+			playersNumber = size;
+			System.out.println("Zmieniono liczbę graczy na "+ playersNumber);
+		}
 	}
-	
-	void setPlayer2(String name) {
-		player2 = new Player(name);
+
+	void changeCubeSize(int size) {
+		if (size % 2 != 0) {
+			throw new IllegalArgumentException("Ilość ścian musi być parzysta");
+		} else {
+			this.layersNumber = size;
+			System.out.println("Zmieniono wielkość kostki na "+layersNumber);
+		}
+	}
+
+	int getCubeSize() {
+		return layersNumber;
+	}
+
+	int getNumberOfPlayers() {
+		return playersNumber;
+	}
+}
+
+class Game extends Settings {
+
+	Player[] allPlayers;
+
+	void createPlayers() {
+
+		Player[] allPlayers = new Player[playersNumber];
+
+		for (int i = 0; i < playersNumber; i++) {
+			allPlayers[i] = new Player("player" + i + 1);
+		}
+	}
+
+	int round = 0;
+
+	void setPlayerName(int player, String name) {
+		allPlayers[player - 1].playerName = name; // player 1 - indeks 0 w tablicy
 	}
 
 	void throwDice() {
 		Kostka a = new Kostka();
 		int result = a.draw();
-		
-		playerTurn += 1;
-		if (playerTurn % 2 != 0) {
-			player1.addResult(result);
-			System.out.println("Gracz 1 wylosował " + result);
-		} else {
-			player2.addResult(result);
-			round += 1;
-			System.out.println("Gracz 2 wylosował "+ result);
-			System.out.println("Koniec rundy " + round);
+
+		for (Player player : allPlayers) {
+			player.addResult(result);
+			System.out.println("Gracz " + player + " wylosował " + result);
 		}
 	}
+
 	void startGame() {
 		System.out.println("Gra się zaczyna");
 	}
+
 	void endGame() {
-		if (player1.getResult() > player2.getResult()) {
-			System.out.println("Gracz 1 wygrał z ilością punktów równą" + player1.getResult());  
-		} else if (player1.getResult() < player2.getResult()){
-			System.out.println("Gracz 2 wygrał z ilością punktów równą" + player2.getResult()); 
-		} else {
-			System.out.println("Remis");
+		int highestScore = 0;
+		Player winningPlayer = null;
+
+		boolean isDraw = false;
+		for (Player player : allPlayers) {
+			if (player.result > highestScore) {
+				highestScore = player.result;
+				winningPlayer = player;
+				isDraw = false;
+			} else if (player.result == highestScore) {
+				isDraw = true;
+				winningPlayer = null;
+			}
+
+			if (isDraw == false) {
+				System.out.println("Wygrał gracz " + winningPlayer + "z ilością punktów: " + highestScore);
+			} else {
+				System.out.println("Remis");
+			}
 		}
 	}
-	
 }
 
-class Kostka {
+class Kostka extends Settings {
+
 	int draw() {
 		Random a = new Random();
-		int drawResult = a.nextInt(6)+ 1;
+		int drawResult = a.nextInt(layersNumber) + 1;
 
-		return drawResult; //zwraca wynik rzutu kością
+		return drawResult; // zwraca wynik rzutu kością
 	}
 }
