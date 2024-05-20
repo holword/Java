@@ -1,0 +1,102 @@
+package MyProgram;
+
+import java.util.Arrays;
+
+class Utwor {
+	private String tytulUtworu;
+	private String wykonawca;
+	private int rokWydania;
+	Utwor (String tytulUtworu, String wykonawca,int rokWydania ){
+		this.tytulUtworu = tytulUtworu;
+		this.wykonawca = wykonawca;
+		this.rokWydania = rokWydania;
+	}
+	public String getTytulUtworu() {
+		return tytulUtworu;
+	}
+
+	public String getWykonawca() {
+		return wykonawca;
+	}
+
+	public int getRokWydania() {
+		return rokWydania;
+	}
+
+	
+	public String tytulPelny() {
+		String rok = Integer.toString(rokWydania);
+		
+		return 	tytulUtworu + " " + "(" + wykonawca + ")" + " " +"[" + rok + "]";
+	}
+}
+
+class Playlist {
+
+	private String nazwaPlaylisty; // playlista max 10 utworów, indeksy od 0 do 9
+	private Utwor[] listaUtworow;
+	int ileUtworow = 0;
+
+	Playlist(String playlistName) {
+		this.nazwaPlaylisty = playlistName;
+		listaUtworow = new Utwor[10];
+		ileUtworow = 0;
+	}
+
+	public void dodajUtwor(Utwor utwor) {
+		if (utwor == null || utwor.toString().trim().isEmpty()) {
+			System.err.println("Argument powinnien zawierać nazwę utworu");
+			return; // return wymagany aby zakończyć działanie metody
+		}
+		if (ileUtworow >= 10) {
+			System.err.println("Playlista jest zapełniona, nie można dodać więcej utowrów");
+			return;
+		}
+		listaUtworow[ileUtworow] = utwor;
+		ileUtworow++;
+	}
+
+	public Utwor pobierzUtwor(int numerUtworu) { // numery od 1-10 czyli indeks o 1 mniejszy
+		if (listaUtworow[numerUtworu - 1] == null) {
+			System.err.println("Na liście nie ma utworu o tym numerze");
+			return null;
+		}
+		System.out.println(listaUtworow[numerUtworu-1]);
+		return listaUtworow[numerUtworu - 1];
+	}
+
+	public void usunUtwor(int numerUtworu) {
+		if (listaUtworow[numerUtworu - 1].toString().isEmpty() == true) {
+			System.err.println("Nie ma wybranego utworu na liście");
+			return;
+		}
+		if (numerUtworu > 10 || numerUtworu < 1) {
+			System.err.println("Niepoprawny numer utworu");
+			return;
+		}
+		ileUtworow--;
+		for (int i = numerUtworu - 1; i <= ileUtworow - 1; i++) {
+			listaUtworow[i] = listaUtworow[i + 1];
+		}
+		listaUtworow[ileUtworow] = null;
+	}
+
+	public void wyswietlPlayliste() {
+		if (listaUtworow[0] == null) {
+			System.err.println("Lista jest pusta");
+			return;
+		}
+
+		Utwor[] istniejace = new Utwor[ileUtworow - 1];
+		istniejace = Arrays.copyOfRange(listaUtworow, 0, ileUtworow);
+		System.out.println(Arrays.toString(istniejace));
+	}
+
+	public void posortuj() {
+		if (listaUtworow[0] == null) {
+			System.err.println("Lista jest pusta");
+		}
+		Arrays.sort(listaUtworow, 0, ileUtworow);
+
+	}
+}
